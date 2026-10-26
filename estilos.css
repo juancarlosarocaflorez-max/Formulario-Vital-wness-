@@ -1,0 +1,69 @@
+:root{
+  color-scheme: light;
+  --bg:#FFF8F7; --surface:#FFFFFF; --text:#3B2228; --muted:#7D6068;
+  --border:#EBD3D3; --accent:#B23A5A; --accent-hover:#963049; --accent-soft:#FBE6E8;
+  --error:#B3261E; --ok:#2F7D5B; --on-accent:#FFFFFF;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#241418; --surface:#2F1D22; --text:#FBEDEE; --muted:#C2A3A9;
+    --border:#4F3339; --accent:#E27793; --accent-hover:#EE92A8; --accent-soft:#472830;
+    --error:#FF8A80; --ok:#7FD1A8; --on-accent:#2A1116;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#241418; --surface:#2F1D22; --text:#FBEDEE; --muted:#C2A3A9;
+  --border:#4F3339; --accent:#E27793; --accent-hover:#EE92A8; --accent-soft:#472830;
+  --error:#FF8A80; --ok:#7FD1A8; --on-accent:#2A1116;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; background:var(--bg); color:var(--text);
+  font-family:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  display:flex; align-items:center; justify-content:center; padding:24px 16px;
+}
+.card{
+  width:100%; max-width:440px; background:var(--surface);
+  border:1px solid var(--border); border-radius:20px; padding:36px 32px;
+  box-shadow:0 12px 40px -18px rgba(178,58,90,.28);
+}
+h1{margin:0 0 8px; font-size:1.7rem; font-weight:700; letter-spacing:-.02em}
+.lead{margin:0 0 28px; color:var(--muted); line-height:1.5}
+.field{margin-bottom:20px}
+label{display:block; font-weight:600; font-size:.92rem; margin-bottom:6px}
+input{
+  width:100%; font:inherit; color:var(--text); background:var(--bg);
+  border:1.5px solid var(--border); border-radius:12px; padding:13px 14px;
+  transition:border-color .15s, box-shadow .15s;
+}
+input::placeholder{color:var(--muted); opacity:.7}
+input:hover{border-color:var(--accent)}
+input:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft)}
+input[aria-invalid="true"]{border-color:var(--error)}
+.err{min-height:1.1em; margin:6px 0 0; font-size:.83rem; color:var(--error)}
+button{
+  width:100%; font:inherit; font-weight:600; font-size:1rem; cursor:pointer;
+  background:var(--accent); color:var(--on-accent); border:0; border-radius:12px;
+  padding:14px; margin-top:6px; transition:background .15s, transform .1s;
+}
+button:hover{background:var(--accent-hover)}
+button:active{transform:scale(.99)}
+button:focus-visible{outline:3px solid var(--accent-soft); outline-offset:2px}
+.fine{margin:18px 0 0; font-size:.82rem; color:var(--muted); text-align:center; line-height:1.5}
+.done{text-align:center; display:none}
+.done.show{display:block; animation:pop .35s ease}
+.check{
+  width:56px; height:56px; border-radius:50%; margin:0 auto 18px;
+  background:var(--accent-soft); color:var(--accent);
+  display:flex; align-items:center; justify-content:center;
+}
+.done button{background:transparent; color:var(--accent); border:1.5px solid var(--border); margin-top:20px}
+.done button:hover{background:var(--accent-soft)}
+@keyframes pop{from{opacity:0; transform:scale(.97)}to{opacity:1; transform:none}}
+@media (prefers-reduced-motion: reduce){.done.show{animation:none}}
+@media (max-width:420px){.card{padding:28px 20px}}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crear cuenta</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<main class="card">
+  <div id="formView">
+    <h1>Crea tu cuenta</h1>
+    <p class="lead">Completa tus datos para registrarte. Solo toma un minuto.</p>
+
+    <div novalidate id="form">
+      <div class="field">
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" type="text" autocomplete="name" placeholder="Juan Carlos Aroca Florez">
+        <p class="err" id="e-nombre" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" type="email" autocomplete="email" inputmode="email" placeholder="nombre@correo.com">
+        <p class="err" id="e-correo" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="telefono">Teléfono</label>
+        <input id="telefono" type="tel" autocomplete="tel" inputmode="tel" placeholder="+57 3215105822">
+        <p class="err" id="e-telefono" aria-live="polite"></p>
+      </div>
+      <button type="button" id="enviar">Crear cuenta</button>
+    </div>
+    <p class="fine">Usaremos tus datos solo para gestionar tu cuenta prueba para la cun .</p>
+  </div>
+
+  <div class="done" id="doneView" role="status">
+    <div class="check">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </div>
+    <h1>¡Registro completado!</h1>
+    <p class="lead" id="doneMsg" style="margin-bottom:0"></p>
+    <button type="button" id="otro">Registrar otra persona</button>
+  </div>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var campos = {
+    nombre: {
+      el:$('nombre'), err:$('e-nombre'),
+      check:function(v){
+        v = v.trim();
+        if(!v) return 'Escribe tu nombre completo.';
+        if(v.split(/\s+/).length < 2 || v.length < 5) return 'Incluye al menos nombre y apellido.';
+        return '';
+      }
+    },
+    correo: {
+      el:$('correo'), err:$('e-correo'),
+      check:function(v){
+        v = v.trim();
+        if(!v) return 'Escribe tu correo electrónico.';
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Revisa el formato, por ejemplo nombre@correo.com.';
+        return '';
+      }
+    },
+    telefono: {
+      el:$('telefono'), err:$('e-telefono'),
+      check:function(v){
+        v = v.trim();
+        if(!v) return 'Escribe tu número de teléfono.';
+        if(!/^\+?[\d\s()-]+$/.test(v)) return 'Usa solo números, espacios y el signo +.';
+        var d = v.replace(/\D/g,'');
+        if(d.length < 7 || d.length > 15) return 'El número debe tener entre 7 y 15 dígitos.';
+        return '';
+      }
+    }
+  };
+
+  function validar(c){
+    var msg = c.check(c.el.value);
+    c.err.textContent = msg;
+    c.el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    return !msg;
+  }
+
+  Object.keys(campos).forEach(function(k){
+    var c = campos[k];
+    c.el.addEventListener('blur', function(){ validar(c); });
+    c.el.addEventListener('input', function(){
+      if(c.el.getAttribute('aria-invalid') === 'true') validar(c);
+    });
+    c.el.addEventListener('keydown', function(e){ if(e.key === 'Enter') enviar(); });
+  });
+
+  function enviar(){
+    var primero = null, ok = true;
+    Object.keys(campos).forEach(function(k){
+      if(!validar(campos[k])){ ok = false; if(!primero) primero = campos[k].el; }
+    });
+    if(!ok){ primero.focus(); return; }
+    var nombre = campos.nombre.el.value.trim().split(/\s+/)[0];
+    $('doneMsg').textContent = 'Gracias, ' + nombre + '. Enviaremos la confirmación a ' + campos.correo.el.value.trim() + '.';
+    $('formView').style.display = 'none';
+    $('doneView').classList.add('show');
+  }
+
+  $('enviar').addEventListener('click', enviar);
+  $('otro').addEventListener('click', function(){
+    Object.keys(campos).forEach(function(k){
+      campos[k].el.value = ''; campos[k].err.textContent = '';
+      campos[k].el.setAttribute('aria-invalid','false');
+    });
+    $('doneView').classList.remove('show');
+    $('formView').style.display = '';
+    campos.nombre.el.focus();
+  });
+})();
+</script>
+</body>
+</html>
